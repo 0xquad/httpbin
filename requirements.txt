@@ -3,7 +3,6 @@ decorator
 brotlipy
 gevent
 Flask
-meinheld
 werkzeug
 six
 flasgger
