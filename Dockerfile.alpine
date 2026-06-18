@@ -1,6 +1,7 @@
 # Modified by Alexandre Hamelin <alexandre.hamelin gmail.com> to rebase
 # it on Alpine Linux. Creates a 4.5x lighter image (~140MB) than the original.
 FROM python:3-alpine AS builder
+ARG CA_CERT_URL=
 
 LABEL name="httpbin"
 LABEL version="0.9.2-alpine"
@@ -11,6 +12,14 @@ ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
 WORKDIR /build
+# Fetch custom CA certs from a custom URL if needed (e.g. behind a proxy, etc.)
+RUN <<end
+    if [[ "${CA_CERT_URL}" = "http://*" || "${CA_CERT_URL}" = "https://*" ]]; then
+        wget -q -T 1 -O - ${CA_CERT_URL} >> /etc/ssl/certs/ca-certificates.crt
+    else
+        true
+    fi
+end
 RUN apk add --no-cache build-base
 COPY requirements.txt .
 RUN pip wheel -r requirements.txt
