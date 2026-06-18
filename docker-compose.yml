@@ -3,6 +3,9 @@ services:
       build:
         context: '.'
         dockerfile: Dockerfile.alpine
+        # uncomment to fetch your custom certs for build the image
+        #args:
+        #  - CA_CERT_URL=http://your-host-serving-certs/ca-certs-bundle.crt
       image: httpbin:alpine
       ports:
         - '8081:80'
